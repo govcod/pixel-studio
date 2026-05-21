@@ -3,321 +3,274 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PIXEL STUDIO — Creative Design Studio</title>
+<title>Pixel Studio — Creative Branding for Food & Hospitality</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400&family=DM+Sans:wght@200;300;400;500&family=Bebas+Neue&display=swap" rel="stylesheet">
 <style>
-  *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
   :root {
     --black: #080808;
-    --white: #f5f5f0;
-    --red: #ff2b2b;
-    --gray: #1a1a1a;
-    --gray2: #2a2a2a;
-    --gray3: #888;
-    --font-display: 'Bebas Neue', sans-serif;
-    --font-body: 'DM Sans', sans-serif;
-    --font-mono: 'Space Mono', monospace;
+    --charcoal: #111111;
+    --surface: #161616;
+    --surface-2: #1e1e1e;
+    --border: rgba(255,255,255,0.06);
+    --border-hover: rgba(255,255,255,0.14);
+    --white: #f5f0eb;
+    --white-dim: rgba(245,240,235,0.55);
+    --white-faint: rgba(245,240,235,0.12);
+    --accent: #c9a96e;
+    --accent-dim: rgba(201,169,110,0.18);
+    --accent-glow: rgba(201,169,110,0.08);
+    --glow: rgba(201,169,110,0.12);
+    --serif: 'Cormorant Garamond', Georgia, serif;
+    --sans: 'DM Sans', sans-serif;
+    --display: 'Bebas Neue', sans-serif;
   }
 
-  html { scroll-behavior: smooth; }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html {
+    scroll-behavior: smooth;
+    font-size: 16px;
+  }
 
   body {
     background: var(--black);
     color: var(--white);
-    font-family: var(--font-body);
+    font-family: var(--sans);
+    font-weight: 300;
+    line-height: 1.6;
     overflow-x: hidden;
     cursor: none;
   }
 
-  /* CUSTOM CURSOR */
-  #cursor {
-    position: fixed;
-    width: 12px; height: 12px;
-    background: var(--red);
+  /* ─── CUSTOM CURSOR ─── */
+  .cursor {
+    width: 10px; height: 10px;
+    background: var(--accent);
     border-radius: 50%;
+    position: fixed;
     pointer-events: none;
     z-index: 9999;
+    transform: translate(-50%, -50%);
     transition: transform 0.1s ease;
-    mix-blend-mode: difference;
+    mix-blend-mode: normal;
   }
-  #cursor-ring {
-    position: fixed;
-    width: 40px; height: 40px;
-    border: 1px solid rgba(255,43,43,0.5);
+  .cursor-ring {
+    width: 38px; height: 38px;
+    border: 1px solid rgba(201,169,110,0.5);
     border-radius: 50%;
+    position: fixed;
     pointer-events: none;
     z-index: 9998;
-    transition: transform 0.15s ease, width 0.3s ease, height 0.3s ease, border-color 0.3s ease;
+    transform: translate(-50%, -50%);
+    transition: all 0.18s ease;
   }
-  body.hovering #cursor { transform: scale(3); }
-  body.hovering #cursor-ring { width: 60px; height: 60px; border-color: rgba(255,43,43,0.8); }
-
-  /* NOISE OVERLAY */
-  body::before {
-    content: '';
-    position: fixed;
-    inset: 0;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
-    pointer-events: none;
-    z-index: 9997;
-    opacity: 0.4;
+  .cursor-ring.hovered {
+    width: 60px; height: 60px;
+    border-color: var(--accent);
+    background: rgba(201,169,110,0.06);
   }
 
-  /* SCROLL PROGRESS */
-  #progress {
-    position: fixed;
-    top: 0; left: 0;
-    height: 2px;
-    background: var(--red);
-    z-index: 9996;
-    width: 0%;
-    transition: width 0.1s linear;
-  }
+  /* ─── SCROLLBAR ─── */
+  ::-webkit-scrollbar { width: 2px; }
+  ::-webkit-scrollbar-track { background: var(--black); }
+  ::-webkit-scrollbar-thumb { background: var(--accent); }
 
-  /* NAV */
+  /* ─── NAV ─── */
   nav {
     position: fixed;
     top: 0; left: 0; right: 0;
     z-index: 100;
-    padding: 28px 48px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    mix-blend-mode: difference;
+    padding: 28px 60px;
+    background: transparent;
+    transition: background 0.5s ease, padding 0.4s ease;
+  }
+  nav.scrolled {
+    background: rgba(8,8,8,0.92);
+    backdrop-filter: blur(20px);
+    padding: 18px 60px;
+    border-bottom: 1px solid var(--border);
   }
   .nav-logo {
-    display: flex;
-    align-items: center;
-    gap: 10px;
+    font-family: var(--serif);
+    font-size: 1.3rem;
+    font-weight: 300;
+    letter-spacing: 0.2em;
+    color: var(--white);
     text-decoration: none;
+    text-transform: uppercase;
   }
-  .logo-mark {
-    display: flex;
-    align-items: center;
-    gap: 0;
-  }
-  .logo-pixel {
-    font-family: var(--font-display);
-    font-size: 22px;
-    letter-spacing: 0.05em;
-    color: var(--white);
-  }
-  .logo-dot {
-    width: 7px; height: 7px;
-    background: var(--red);
-    border-radius: 1px;
-    display: inline-block;
-    margin-bottom: 12px;
-    animation: dotPulse 2s ease-in-out infinite;
-  }
-  .logo-studio {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    color: var(--white);
-    opacity: 0.7;
-  }
-  @keyframes dotPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-  }
+  .nav-logo span { color: var(--accent); }
   .nav-links {
     display: flex;
-    gap: 40px;
+    gap: 44px;
     list-style: none;
   }
   .nav-links a {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    text-decoration: none;
-    color: var(--white);
-    opacity: 0.7;
-    transition: opacity 0.3s;
-    position: relative;
-  }
-  .nav-links a::after {
-    content: '';
-    position: absolute;
-    bottom: -2px; left: 0;
-    width: 0; height: 1px;
-    background: var(--red);
-    transition: width 0.3s ease;
-  }
-  .nav-links a:hover { opacity: 1; }
-  .nav-links a:hover::after { width: 100%; }
-  .nav-cta {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--black);
-    background: var(--white);
-    padding: 10px 22px;
-    text-decoration: none;
-    transition: background 0.3s, color 0.3s;
-  }
-  .nav-cta:hover { background: var(--red); color: var(--white); }
-
-  /* LOADING SCREEN */
-  #loader {
-    position: fixed;
-    inset: 0;
-    background: var(--black);
-    z-index: 9990;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    transition: opacity 0.8s ease, visibility 0.8s ease;
-  }
-  #loader.hidden { opacity: 0; visibility: hidden; }
-  .loader-logo {
-    font-family: var(--font-display);
-    font-size: 60px;
-    letter-spacing: 0.1em;
-    color: var(--white);
-    animation: loaderPulse 1.5s ease-in-out infinite;
-  }
-  .loader-logo span { color: var(--red); }
-  .loader-bar {
-    width: 200px;
-    height: 1px;
-    background: var(--gray2);
-    margin-top: 30px;
-    overflow: hidden;
-  }
-  .loader-fill {
-    height: 100%;
-    background: var(--red);
-    width: 0%;
-    animation: loaderFill 2s ease forwards;
-  }
-  .loader-num {
-    font-family: var(--font-mono);
-    font-size: 11px;
+    font-size: 0.72rem;
     letter-spacing: 0.2em;
-    color: var(--gray3);
-    margin-top: 16px;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    text-decoration: none;
+    transition: color 0.3s;
+    font-weight: 400;
   }
-  @keyframes loaderPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.6; }
+  .nav-links a:hover { color: var(--accent); }
+  .nav-cta {
+    font-size: 0.72rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--accent);
+    text-decoration: none;
+    border: 1px solid rgba(201,169,110,0.4);
+    padding: 10px 24px;
+    transition: all 0.3s;
+    font-weight: 400;
   }
-  @keyframes loaderFill {
-    0% { width: 0%; }
-    100% { width: 100%; }
+  .nav-cta:hover {
+    background: var(--accent);
+    color: var(--black);
   }
 
-  /* HERO */
+  /* ─── HERO ─── */
   #hero {
-    height: 100vh;
+    min-height: 100vh;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 0 48px 80px;
+    padding: 0 60px 80px;
     position: relative;
     overflow: hidden;
   }
-  .hero-grid {
+
+  .hero-bg {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  .hero-grain {
+    position: absolute;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 512 512' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    opacity: 0.6;
+    z-index: 1;
+    pointer-events: none;
+  }
+
+  .hero-orb {
+    position: absolute;
+    border-radius: 50%;
+    filter: blur(120px);
+    animation: orbFloat 12s ease-in-out infinite;
+    pointer-events: none;
+  }
+  .orb-1 {
+    width: 600px; height: 600px;
+    background: radial-gradient(circle, rgba(201,169,110,0.07) 0%, transparent 70%);
+    top: -100px; right: -100px;
+    animation-delay: 0s;
+  }
+  .orb-2 {
+    width: 400px; height: 400px;
+    background: radial-gradient(circle, rgba(201,169,110,0.05) 0%, transparent 70%);
+    bottom: 100px; left: -80px;
+    animation-delay: -6s;
+  }
+  .orb-3 {
+    width: 300px; height: 300px;
+    background: radial-gradient(circle, rgba(180,150,100,0.04) 0%, transparent 70%);
+    top: 40%; left: 40%;
+    animation-delay: -3s;
+  }
+
+  @keyframes orbFloat {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    33% { transform: translate(30px, -40px) scale(1.05); }
+    66% { transform: translate(-20px, 20px) scale(0.96); }
+  }
+
+  .hero-lines {
     position: absolute;
     inset: 0;
     background-image:
-      linear-gradient(rgba(255,255,255,0.03) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.03) 1px, transparent 1px);
+      linear-gradient(rgba(201,169,110,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(201,169,110,0.025) 1px, transparent 1px);
     background-size: 80px 80px;
-    animation: gridShift 20s linear infinite;
+    z-index: 0;
+    mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 0%, transparent 100%);
   }
-  @keyframes gridShift {
-    0% { transform: translateY(0); }
-    100% { transform: translateY(80px); }
-  }
-  .hero-accent {
-    position: absolute;
-    top: 15%;
-    right: 10%;
-    width: 300px; height: 300px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,43,43,0.15) 0%, transparent 70%);
-    animation: accentFloat 8s ease-in-out infinite;
-    pointer-events: none;
-  }
-  @keyframes accentFloat {
-    0%, 100% { transform: translate(0, 0) scale(1); }
-    33% { transform: translate(30px, -20px) scale(1.1); }
-    66% { transform: translate(-20px, 15px) scale(0.95); }
+
+  .hero-content {
+    position: relative;
+    z-index: 2;
+    max-width: 900px;
   }
   .hero-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.4em;
-    color: var(--red);
-    margin-bottom: 24px;
+    font-size: 0.68rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 32px;
     display: flex;
     align-items: center;
     gap: 16px;
     opacity: 0;
-    transform: translateY(20px);
-    animation: fadeUp 0.8s ease 2.2s forwards;
+    animation: fadeUp 1s ease 0.3s forwards;
   }
   .hero-eyebrow::before {
     content: '';
     width: 40px;
     height: 1px;
-    background: var(--red);
+    background: var(--accent);
     display: block;
   }
-  .hero-title {
-    font-family: var(--font-display);
-    font-size: clamp(72px, 11vw, 180px);
-    line-height: 0.9;
+  .hero-headline {
+    font-family: var(--serif);
+    font-size: clamp(4rem, 9vw, 9rem);
+    font-weight: 300;
+    line-height: 0.95;
     letter-spacing: -0.01em;
-    color: var(--white);
+    margin-bottom: 36px;
     opacity: 0;
-    transform: translateY(60px);
-    animation: fadeUp 1s ease 2.4s forwards;
+    animation: fadeUp 1s ease 0.5s forwards;
   }
-  .hero-title .line2 {
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(255,255,255,0.3);
-    display: block;
-  }
-  .hero-title .accent { color: var(--red); }
-  .hero-bottom {
-    display: flex;
-    align-items: flex-end;
-    justify-content: space-between;
-    margin-top: 40px;
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeUp 0.8s ease 2.7s forwards;
+  .hero-headline em {
+    font-style: italic;
+    color: var(--accent);
   }
   .hero-sub {
-    font-family: var(--font-body);
-    font-size: 15px;
-    line-height: 1.6;
-    color: rgba(255,255,255,0.5);
-    max-width: 380px;
+    font-size: clamp(0.9rem, 1.4vw, 1.05rem);
+    color: var(--white-dim);
+    max-width: 420px;
+    line-height: 1.8;
+    margin-bottom: 52px;
     font-weight: 300;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.7s forwards;
   }
   .hero-actions {
     display: flex;
-    gap: 16px;
+    gap: 20px;
     align-items: center;
+    opacity: 0;
+    animation: fadeUp 1s ease 0.9s forwards;
   }
   .btn-primary {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    background: var(--red);
-    color: var(--white);
-    padding: 16px 32px;
-    font-family: var(--font-mono);
-    font-size: 11px;
+    background: var(--accent);
+    color: var(--black);
+    padding: 16px 40px;
+    font-size: 0.75rem;
     letter-spacing: 0.2em;
+    text-transform: uppercase;
     text-decoration: none;
-    transition: all 0.3s ease;
+    font-family: var(--sans);
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-block;
     position: relative;
     overflow: hidden;
   }
@@ -325,1560 +278,1161 @@
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--white);
-    transform: scaleX(0);
-    transform-origin: left;
+    background: rgba(255,255,255,0.15);
+    transform: translateX(-100%);
     transition: transform 0.4s ease;
   }
-  .btn-primary:hover::before { transform: scaleX(1); }
-  .btn-primary:hover { color: var(--black); }
-  .btn-primary span { position: relative; z-index: 1; }
-  .btn-arrow {
-    position: relative; z-index: 1;
-    transition: transform 0.3s ease;
-  }
-  .btn-primary:hover .btn-arrow { transform: translateX(6px); }
+  .btn-primary:hover::before { transform: translateX(0); }
   .btn-ghost {
-    display: inline-flex;
-    align-items: center;
-    gap: 12px;
-    border: 1px solid rgba(255,255,255,0.2);
     color: var(--white);
-    padding: 16px 32px;
-    font-family: var(--font-mono);
-    font-size: 11px;
+    padding: 16px 40px;
+    font-size: 0.75rem;
     letter-spacing: 0.2em;
+    text-transform: uppercase;
     text-decoration: none;
-    transition: all 0.3s ease;
+    font-family: var(--sans);
+    font-weight: 400;
+    border: 1px solid var(--border-hover);
+    transition: all 0.3s;
+    display: inline-block;
   }
-  .btn-ghost:hover { border-color: var(--white); background: rgba(255,255,255,0.05); }
+  .btn-ghost:hover {
+    border-color: rgba(201,169,110,0.4);
+    color: var(--accent);
+  }
+
   .hero-scroll {
     position: absolute;
     bottom: 40px;
-    left: 50%;
-    transform: translateX(-50%);
+    right: 60px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 8px;
+    gap: 12px;
+    z-index: 2;
     opacity: 0;
-    animation: fadeIn 0.8s ease 3.2s forwards;
+    animation: fadeUp 1s ease 1.2s forwards;
+  }
+  .hero-scroll span {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    writing-mode: vertical-lr;
   }
   .scroll-line {
     width: 1px;
     height: 60px;
-    background: linear-gradient(to bottom, transparent, var(--red));
+    background: linear-gradient(to bottom, var(--accent), transparent);
     animation: scrollPulse 2s ease-in-out infinite;
   }
-  .scroll-label {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    color: var(--gray3);
-    writing-mode: vertical-rl;
-    transform: rotate(180deg);
-  }
   @keyframes scrollPulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.3; }
+    0%, 100% { opacity: 1; transform: scaleY(1); }
+    50% { opacity: 0.4; transform: scaleY(0.7); }
   }
+
   @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
     to { opacity: 1; transform: translateY(0); }
   }
-  @keyframes fadeIn {
-    to { opacity: 1; }
-  }
 
-  /* TICKER */
-  .ticker {
-    background: var(--red);
-    padding: 14px 0;
-    overflow: hidden;
-    white-space: nowrap;
-  }
-  .ticker-inner {
-    display: inline-flex;
-    animation: ticker 20s linear infinite;
-  }
-  .ticker-item {
-    font-family: var(--font-display);
-    font-size: 16px;
-    letter-spacing: 0.2em;
-    color: var(--white);
-    padding: 0 40px;
-  }
-  .ticker-sep {
-    color: rgba(255,255,255,0.4);
-    margin: 0 10px;
-  }
-  @keyframes ticker {
-    0% { transform: translateX(0); }
-    100% { transform: translateX(-50%); }
-  }
-
-  /* SECTION COMMON */
-  section {
-    padding: 120px 48px;
-  }
+  /* ─── SECTION COMMONS ─── */
+  section { padding: 120px 60px; }
   .section-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 0.65rem;
     letter-spacing: 0.4em;
-    color: var(--red);
+    text-transform: uppercase;
+    color: var(--accent);
     margin-bottom: 60px;
     display: flex;
     align-items: center;
     gap: 16px;
   }
-  .section-label::before {
+  .section-label::after {
     content: '';
-    width: 30px;
+    flex: 1;
+    max-width: 60px;
     height: 1px;
-    background: var(--red);
+    background: var(--accent);
+    opacity: 0.5;
   }
 
-  /* ABOUT */
-  #about {
-    background: var(--gray);
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 80px;
-    align-items: center;
-  }
-  .about-left .big-number {
-    font-family: var(--font-display);
-    font-size: 200px;
-    line-height: 0.8;
-    color: transparent;
-    -webkit-text-stroke: 1px rgba(255,255,255,0.08);
-    user-select: none;
-  }
-  .about-heading {
-    font-family: var(--font-display);
-    font-size: clamp(48px, 6vw, 90px);
-    line-height: 0.95;
-    color: var(--white);
-    margin-top: -30px;
-  }
-  .about-right p {
-    font-size: 17px;
-    line-height: 1.75;
-    color: rgba(255,255,255,0.6);
-    font-weight: 300;
-    margin-bottom: 28px;
-  }
-  .about-right p strong {
-    color: var(--white);
-    font-weight: 500;
-  }
-  .about-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 32px;
-    margin-top: 48px;
-    padding-top: 48px;
-    border-top: 1px solid rgba(255,255,255,0.1);
-  }
-  .stat-num {
-    font-family: var(--font-display);
-    font-size: 52px;
-    color: var(--red);
-    line-height: 1;
-  }
-  .stat-label {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    color: var(--gray3);
-    margin-top: 6px;
-  }
-
-  /* SERVICES */
-  #services { background: var(--black); }
-  .services-header {
+  /* ─── WORK ─── */
+  #work { background: var(--black); }
+  .work-header {
     display: flex;
     align-items: flex-end;
     justify-content: space-between;
-    margin-bottom: 80px;
+    margin-bottom: 70px;
+    flex-wrap: wrap;
+    gap: 20px;
   }
-  .services-title {
-    font-family: var(--font-display);
-    font-size: clamp(56px, 8vw, 120px);
-    line-height: 0.9;
-    color: var(--white);
+  .work-title {
+    font-family: var(--serif);
+    font-size: clamp(2.8rem, 5vw, 5rem);
+    font-weight: 300;
+    line-height: 1;
   }
-  .services-desc {
-    max-width: 300px;
-    font-size: 14px;
-    line-height: 1.7;
-    color: var(--gray3);
+  .work-title em { font-style: italic; color: var(--accent); }
+  .work-count {
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    color: var(--white-dim);
+    text-transform: uppercase;
+    align-self: flex-end;
+    padding-bottom: 8px;
   }
-  .services-grid {
+
+  .work-grid {
     display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(12, 1fr);
     gap: 2px;
   }
-  .service-card {
-    background: var(--gray);
-    padding: 40px 32px;
+  .work-card {
+    background: var(--surface);
     position: relative;
     overflow: hidden;
     cursor: none;
-    transition: background 0.4s ease;
-    min-height: 260px;
+    transition: all 0.5s ease;
+  }
+  .work-card:nth-child(1) { grid-column: span 7; aspect-ratio: 16/10; }
+  .work-card:nth-child(2) { grid-column: span 5; aspect-ratio: 4/5; }
+  .work-card:nth-child(3) { grid-column: span 4; aspect-ratio: 5/6; }
+  .work-card:nth-child(4) { grid-column: span 5; aspect-ratio: 5/6; }
+  .work-card:nth-child(5) { grid-column: span 3; aspect-ratio: 3/4; }
+
+  .card-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  }
+  .work-card:hover .card-bg { transform: scale(1.06); }
+
+  .card-bg-1 {
+    background:
+      radial-gradient(ellipse at 30% 70%, rgba(201,169,110,0.12) 0%, transparent 60%),
+      linear-gradient(145deg, #0e0c0a 0%, #1a1510 40%, #0a0905 100%);
+  }
+  .card-bg-2 {
+    background:
+      radial-gradient(ellipse at 70% 30%, rgba(180,130,80,0.1) 0%, transparent 60%),
+      linear-gradient(145deg, #0d0f0e 0%, #141a15 40%, #0a0c0b 100%);
+  }
+  .card-bg-3 {
+    background:
+      radial-gradient(ellipse at 20% 80%, rgba(160,120,80,0.1) 0%, transparent 60%),
+      linear-gradient(145deg, #0f0d0e 0%, #1a1418 40%, #0c0a0b 100%);
+  }
+  .card-bg-4 {
+    background:
+      radial-gradient(ellipse at 80% 20%, rgba(201,169,110,0.1) 0%, transparent 60%),
+      linear-gradient(145deg, #0d0e10 0%, #141620 40%, #0a0a0f 100%);
+  }
+  .card-bg-5 {
+    background:
+      radial-gradient(ellipse at 50% 50%, rgba(180,150,100,0.1) 0%, transparent 60%),
+      linear-gradient(145deg, #0e0e0e 0%, #1a1a18 40%, #0a0a09 100%);
+  }
+
+  .card-noise {
+    position: absolute;
+    inset: 0;
+    opacity: 0.3;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.08'/%3E%3C/svg%3E");
+  }
+
+  .card-icon {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: clamp(60px, 8vw, 100px);
+    opacity: 0.04;
+    font-family: var(--display);
+    letter-spacing: -0.05em;
+    white-space: nowrap;
+    transition: opacity 0.5s;
+    pointer-events: none;
+  }
+  .work-card:hover .card-icon { opacity: 0.07; }
+
+  .card-info {
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    padding: 32px 28px;
+    background: linear-gradient(to top, rgba(0,0,0,0.88) 0%, transparent 100%);
+    transform: translateY(8px);
+    transition: transform 0.4s ease;
+  }
+  .work-card:hover .card-info { transform: translateY(0); }
+  .card-cat {
+    font-size: 0.6rem;
+    letter-spacing: 0.3em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 8px;
+  }
+  .card-name {
+    font-family: var(--serif);
+    font-size: 1.5rem;
+    font-weight: 400;
+    line-height: 1.1;
+    margin-bottom: 8px;
+  }
+  .card-desc {
+    font-size: 0.72rem;
+    color: var(--white-dim);
+    line-height: 1.6;
+    max-width: 260px;
+    opacity: 0;
+    transform: translateY(8px);
+    transition: all 0.4s ease 0.05s;
+  }
+  .work-card:hover .card-desc { opacity: 1; transform: translateY(0); }
+
+  .card-arrow {
+    position: absolute;
+    top: 28px; right: 28px;
+    width: 40px; height: 40px;
+    border: 1px solid var(--border-hover);
     display: flex;
-    flex-direction: column;
-    justify-content: space-between;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translate(6px, -6px);
+    transition: all 0.4s ease;
+  }
+  .work-card:hover .card-arrow {
+    opacity: 1;
+    transform: translate(0, 0);
+    border-color: var(--accent);
+  }
+  .card-arrow svg { width: 14px; height: 14px; stroke: var(--accent); fill: none; }
+
+  /* ─── SERVICES ─── */
+  #services { background: var(--charcoal); }
+  .services-top {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 80px;
+    margin-bottom: 80px;
+    align-items: end;
+  }
+  .services-title {
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 4vw, 4.2rem);
+    font-weight: 300;
+    line-height: 1.05;
+  }
+  .services-title em { font-style: italic; color: var(--accent); }
+  .services-desc {
+    font-size: 0.88rem;
+    color: var(--white-dim);
+    line-height: 1.9;
+    max-width: 360px;
+  }
+
+  .services-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1px;
+    background: var(--border);
+  }
+  .service-card {
+    background: var(--charcoal);
+    padding: 48px 40px;
+    position: relative;
+    overflow: hidden;
+    transition: background 0.4s;
   }
   .service-card::before {
     content: '';
     position: absolute;
-    top: 0; left: 0;
-    width: 0; height: 2px;
-    background: var(--red);
-    transition: width 0.4s ease;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0;
+    transition: opacity 0.4s;
   }
-  .service-card:hover { background: var(--gray2); }
-  .service-card:hover::before { width: 100%; }
+  .service-card:hover { background: var(--surface-2); }
+  .service-card:hover::before { opacity: 1; }
   .service-num {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--red);
-    letter-spacing: 0.2em;
-    margin-bottom: 20px;
+    font-family: var(--display);
+    font-size: 4rem;
+    color: var(--white-faint);
+    line-height: 1;
+    margin-bottom: 28px;
+    transition: color 0.4s;
   }
+  .service-card:hover .service-num { color: var(--accent-dim); }
   .service-name {
-    font-family: var(--font-display);
-    font-size: 28px;
-    letter-spacing: 0.02em;
-    color: var(--white);
-    line-height: 1.1;
+    font-family: var(--serif);
+    font-size: 1.4rem;
+    font-weight: 400;
+    margin-bottom: 14px;
   }
-  .service-tag {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    color: var(--gray3);
-    margin-top: 16px;
+  .service-text {
+    font-size: 0.78rem;
+    color: var(--white-dim);
+    line-height: 1.8;
   }
-  .service-arrow {
+  .service-glow {
     position: absolute;
-    bottom: 32px; right: 32px;
-    width: 36px; height: 36px;
-    border: 1px solid rgba(255,255,255,0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    color: var(--white);
-    font-size: 16px;
-    transition: all 0.3s ease;
-    transform: rotate(0deg);
+    bottom: -40px; right: -40px;
+    width: 140px; height: 140px;
+    background: radial-gradient(circle, var(--accent-glow) 0%, transparent 70%);
+    opacity: 0;
+    transition: opacity 0.5s;
   }
-  .service-card:hover .service-arrow {
-    background: var(--red);
-    border-color: var(--red);
-    transform: rotate(-45deg);
-  }
+  .service-card:hover .service-glow { opacity: 1; }
 
-  /* PROJECTS */
-  #projects { background: var(--black); padding-bottom: 0; }
-  .projects-header {
-    margin-bottom: 60px;
-  }
-  .projects-title {
-    font-family: var(--font-display);
-    font-size: clamp(56px, 8vw, 120px);
-    line-height: 0.9;
-    color: var(--white);
-  }
-  .projects-scroll-container {
-    overflow-x: auto;
-    display: flex;
-    gap: 2px;
-    padding-bottom: 60px;
-    scrollbar-width: none;
-  }
-  .projects-scroll-container::-webkit-scrollbar { display: none; }
-  .project-card {
-    flex: 0 0 480px;
-    height: 600px;
-    background: var(--gray);
+  /* ─── PHILOSOPHY ─── */
+  #philosophy {
+    background: var(--black);
+    text-align: center;
+    padding: 160px 60px;
     position: relative;
     overflow: hidden;
-    cursor: none;
-    transition: flex 0.5s ease;
   }
-  .project-card:hover { flex: 0 0 560px; }
-  .project-bg {
+  .philosophy-bg {
     position: absolute;
     inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 120px;
-    color: rgba(255,255,255,0.03);
-    letter-spacing: -0.05em;
-    transition: transform 0.6s ease;
+    background:
+      radial-gradient(ellipse 80% 60% at 50% 50%, rgba(201,169,110,0.04) 0%, transparent 70%);
+    pointer-events: none;
   }
-  .project-card:hover .project-bg { transform: scale(1.1); }
-  .project-visual {
+  .philosophy-line {
     position: absolute;
-    inset: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 40px;
+    left: 50%;
+    top: 0;
+    width: 1px;
+    height: 80px;
+    background: linear-gradient(to bottom, transparent, var(--accent));
+    opacity: 0.4;
   }
-  .project-mockup {
-    width: 100%;
-    max-width: 340px;
-    background: #111;
-    padding: 30px;
-    border: 1px solid rgba(255,255,255,0.06);
-    transition: transform 0.5s ease;
-  }
-  .project-card:hover .project-mockup { transform: translateY(-10px); }
-  .mockup-logo {
-    font-family: var(--font-display);
-    font-size: 32px;
-    color: var(--white);
-    letter-spacing: 0.05em;
-    margin-bottom: 8px;
-  }
-  .mockup-sub {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    color: var(--gray3);
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    border-bottom: 1px solid rgba(255,255,255,0.08);
-  }
-  .mockup-lines { display: flex; flex-direction: column; gap: 8px; }
-  .mockup-line {
-    height: 6px;
-    background: rgba(255,255,255,0.08);
-    border-radius: 2px;
-  }
-  .mockup-line.short { width: 60%; }
-  .mockup-line.red { background: rgba(255,43,43,0.3); }
-  .mockup-accent {
-    width: 40px; height: 4px;
-    background: var(--red);
-    margin-top: 16px;
-  }
-  .project-info {
-    position: absolute;
-    bottom: 0; left: 0; right: 0;
-    padding: 32px;
-    background: linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%);
-    transform: translateY(20px);
-    transition: transform 0.4s ease;
-  }
-  .project-card:hover .project-info { transform: translateY(0); }
-  .project-cat {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.3em;
-    color: var(--red);
-    margin-bottom: 8px;
-  }
-  .project-name {
-    font-family: var(--font-display);
-    font-size: 28px;
-    letter-spacing: 0.02em;
-    color: var(--white);
-  }
-  .project-year {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--gray3);
-    margin-top: 8px;
-  }
-
-  /* PROCESS */
-  #process {
-    background: var(--gray);
-  }
-  .process-title {
-    font-family: var(--font-display);
-    font-size: clamp(48px, 7vw, 100px);
-    line-height: 0.9;
-    color: var(--white);
-    margin-bottom: 80px;
-  }
-  .process-steps {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 0;
-    position: relative;
-  }
-  .process-steps::before {
-    content: '';
-    position: absolute;
-    top: 24px;
-    left: 10%;
-    right: 10%;
-    height: 1px;
-    background: rgba(255,255,255,0.1);
-  }
-  .process-steps::after {
-    content: '';
-    position: absolute;
-    top: 24px;
-    left: 10%;
-    height: 1px;
-    background: var(--red);
-    animation: processLine 3s ease forwards 0.5s;
-    width: 0;
-  }
-  @keyframes processLine {
-    to { width: 80%; }
-  }
-  .step {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding: 0 20px;
-    padding-top: 0;
-  }
-  .step-dot {
-    width: 48px; height: 48px;
-    border-radius: 50%;
-    border: 2px solid rgba(255,255,255,0.15);
-    background: var(--gray);
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  .philosophy-label {
+    font-size: 0.65rem;
+    letter-spacing: 0.4em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 50px;
+    display: block;
     position: relative;
     z-index: 1;
-    transition: all 0.4s ease;
-    margin-bottom: 28px;
   }
-  .step:hover .step-dot {
-    border-color: var(--red);
-    background: rgba(255,43,43,0.1);
+  .philosophy-statement {
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5.5vw, 6rem);
+    font-weight: 300;
+    line-height: 1.1;
+    max-width: 900px;
+    margin: 0 auto 40px;
+    position: relative;
+    z-index: 1;
   }
-  .step-dot-inner {
-    width: 8px; height: 8px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.3);
-    transition: background 0.3s ease;
+  .philosophy-statement em {
+    font-style: italic;
+    color: var(--accent);
   }
-  .step:hover .step-dot-inner { background: var(--red); }
-  .step-num {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.2em;
-    color: var(--red);
-    margin-bottom: 12px;
-  }
-  .step-title {
-    font-family: var(--font-display);
-    font-size: 26px;
-    letter-spacing: 0.05em;
-    color: var(--white);
-    margin-bottom: 12px;
-  }
-  .step-desc {
-    font-size: 13px;
-    line-height: 1.6;
-    color: var(--gray3);
+  .philosophy-sub {
+    font-size: 0.85rem;
+    color: var(--white-dim);
+    letter-spacing: 0.08em;
+    position: relative;
+    z-index: 1;
   }
 
-  /* MOTION SHOWCASE */
-  #motion {
-    background: var(--black);
-    overflow: hidden;
-  }
-  .motion-title {
-    font-family: var(--font-display);
-    font-size: clamp(56px, 8vw, 120px);
-    line-height: 0.9;
-    color: var(--white);
-    margin-bottom: 60px;
-  }
-  .motion-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    grid-template-rows: auto auto;
-    gap: 2px;
-  }
-  .motion-cell {
-    background: var(--gray);
-    aspect-ratio: 4/3;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: hidden;
-    position: relative;
-    cursor: none;
-  }
-  .motion-cell.tall { grid-row: span 2; aspect-ratio: auto; min-height: 500px; }
-  .motion-anim {
-    width: 100%;
-    height: 100%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-direction: column;
-    gap: 16px;
-    position: relative;
-  }
-  /* Kinetic typography animation */
-  .kine-text {
-    font-family: var(--font-display);
-    font-size: 48px;
-    letter-spacing: 0.05em;
-    color: var(--white);
-    animation: kineShift 3s ease-in-out infinite alternate;
-  }
-  .kine-sub {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.4em;
-    color: var(--red);
-    animation: kineShift 3s ease-in-out infinite alternate-reverse;
-  }
-  @keyframes kineShift {
-    0% { transform: translateY(0) scale(1); opacity: 0.7; }
-    100% { transform: translateY(-10px) scale(1.03); opacity: 1; }
-  }
-  /* Rotating logo */
-  .rot-ring {
-    width: 120px; height: 120px;
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    animation: spin 8s linear infinite;
-    position: relative;
-  }
-  .rot-ring::before {
-    content: 'PIXEL STUDIO · CREATIVE DESIGN · 2026 ·';
-    position: absolute;
-    font-family: var(--font-mono);
-    font-size: 7px;
-    letter-spacing: 0.15em;
-    color: var(--gray3);
-    animation: counterSpin 8s linear infinite;
-    width: 180px;
-    text-align: center;
-    transform-origin: center;
-  }
-  .rot-center {
-    width: 8px; height: 8px;
-    background: var(--red);
-    border-radius: 1px;
-  }
-  @keyframes spin { to { transform: rotate(360deg); } }
-  @keyframes counterSpin { to { transform: rotate(-360deg); } }
-  /* Pulse bars */
-  .pulse-bars {
+  /* ─── INSTAGRAM ─── */
+  #instagram { background: var(--surface); }
+  .ig-header {
     display: flex;
     align-items: flex-end;
-    gap: 4px;
-    height: 80px;
-    padding: 20px;
+    justify-content: space-between;
+    margin-bottom: 60px;
+    flex-wrap: wrap;
+    gap: 20px;
   }
-  .pulse-bar {
-    width: 8px;
-    background: var(--red);
-    border-radius: 2px;
-    animation: pulseBar 1.2s ease-in-out infinite;
+  .ig-title {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    font-weight: 300;
+    line-height: 1;
   }
-  .pulse-bar:nth-child(1) { animation-delay: 0s; height: 40%; }
-  .pulse-bar:nth-child(2) { animation-delay: 0.15s; height: 70%; }
-  .pulse-bar:nth-child(3) { animation-delay: 0.3s; height: 55%; }
-  .pulse-bar:nth-child(4) { animation-delay: 0.45s; height: 90%; }
-  .pulse-bar:nth-child(5) { animation-delay: 0.6s; height: 60%; }
-  .pulse-bar:nth-child(6) { animation-delay: 0.75s; height: 80%; }
-  .pulse-bar:nth-child(7) { animation-delay: 0.9s; height: 45%; }
-  @keyframes pulseBar {
-    0%, 100% { transform: scaleY(1); opacity: 0.7; }
-    50% { transform: scaleY(1.5); opacity: 1; }
+  .ig-title em { font-style: italic; color: var(--accent); }
+  .ig-link {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    color: var(--white-dim);
+    text-decoration: none;
+    font-size: 0.75rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    transition: color 0.3s;
+    border-bottom: 1px solid var(--border);
+    padding-bottom: 4px;
   }
-  /* Grid anim */
-  .grid-anim {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 4px;
-    padding: 24px;
-    width: 100%;
-  }
-  .ga-cell {
-    aspect-ratio: 1;
-    background: rgba(255,255,255,0.05);
-    border-radius: 2px;
-    animation: gaCycle 3s ease-in-out infinite;
-  }
-  .ga-cell:nth-child(4n+1) { animation-delay: 0s; }
-  .ga-cell:nth-child(4n+2) { animation-delay: 0.2s; }
-  .ga-cell:nth-child(4n+3) { animation-delay: 0.4s; }
-  .ga-cell:nth-child(4n+4) { animation-delay: 0.6s; }
-  @keyframes gaCycle {
-    0%, 100% { background: rgba(255,255,255,0.05); }
-    50% { background: rgba(255,43,43,0.3); }
-  }
-  /* Arrow orbit */
-  .arrow-orbit {
-    position: relative;
-    width: 140px; height: 140px;
-  }
-  .orbit-center {
-    position: absolute;
-    top: 50%; left: 50%;
-    transform: translate(-50%, -50%);
-    font-family: var(--font-display);
-    font-size: 24px;
-    color: var(--white);
-    letter-spacing: 0.1em;
-  }
-  .orbit-dot {
-    position: absolute;
-    width: 10px; height: 10px;
-    background: var(--red);
-    border-radius: 50%;
-    top: 0; left: 50%;
-    transform-origin: 0 70px;
-    animation: orbitSpin 3s linear infinite;
-    margin-left: -5px;
-  }
-  @keyframes orbitSpin { to { transform: rotate(360deg); } }
-  .motion-label {
-    position: absolute;
-    bottom: 20px; left: 20px;
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.25em;
-    color: var(--gray3);
-  }
+  .ig-link:hover { color: var(--accent); border-color: var(--accent); }
+  .ig-link svg { width: 14px; height: 14px; fill: currentColor; }
 
-  /* TESTIMONIALS */
-  #testimonials {
-    background: var(--black);
-  }
-  .testi-title {
-    font-family: var(--font-display);
-    font-size: clamp(48px, 6vw, 90px);
-    line-height: 0.9;
-    color: var(--white);
-    margin-bottom: 80px;
-  }
-  .testi-grid {
+  .ig-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(6, 1fr);
     gap: 2px;
   }
-  .testi-card {
-    background: var(--gray);
-    padding: 48px 40px;
-    position: relative;
-    transition: background 0.4s ease;
-  }
-  .testi-card:hover { background: var(--gray2); }
-  .testi-quote {
-    font-family: var(--font-display);
-    font-size: 80px;
-    color: var(--red);
-    line-height: 0.5;
-    opacity: 0.4;
-    margin-bottom: 24px;
-  }
-  .testi-text {
-    font-size: 16px;
-    line-height: 1.75;
-    color: rgba(255,255,255,0.7);
-    font-weight: 300;
-    margin-bottom: 40px;
-    font-style: italic;
-  }
-  .testi-author {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-  }
-  .testi-avatar {
-    width: 44px; height: 44px;
-    border-radius: 50%;
-    background: var(--gray2);
-    border: 1px solid rgba(255,255,255,0.1);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-family: var(--font-display);
-    font-size: 18px;
-    color: var(--red);
-  }
-  .testi-name {
-    font-family: var(--font-mono);
-    font-size: 11px;
-    letter-spacing: 0.15em;
-    color: var(--white);
-  }
-  .testi-role {
-    font-family: var(--font-mono);
-    font-size: 9px;
-    letter-spacing: 0.15em;
-    color: var(--gray3);
-    margin-top: 3px;
-  }
-
-  /* CTA */
-  #cta {
-    background: var(--black);
-    text-align: center;
-    padding: 160px 48px;
+  .ig-cell {
+    aspect-ratio: 1;
+    background: var(--surface-2);
     position: relative;
     overflow: hidden;
   }
-  #cta::before {
-    content: '';
+  .ig-cell:nth-child(1) { grid-column: span 2; grid-row: span 2; }
+  .ig-cell-bg {
+    position: absolute;
+    inset: 0;
+    transition: transform 0.6s ease;
+  }
+  .ig-cell:hover .ig-cell-bg { transform: scale(1.08); }
+
+  .ig-cell-bg-1 { background: linear-gradient(135deg, #1a1208 0%, #2a1e0a 50%, #0e0c08 100%); }
+  .ig-cell-bg-2 { background: linear-gradient(135deg, #0a100c 0%, #121e15 50%, #080c0a 100%); }
+  .ig-cell-bg-3 { background: linear-gradient(135deg, #10080e 0%, #1e1018 50%, #0c080c 100%); }
+  .ig-cell-bg-4 { background: linear-gradient(135deg, #08100e 0%, #12201a 50%, #080e0c 100%); }
+  .ig-cell-bg-5 { background: linear-gradient(135deg, #100e08 0%, #201a10 50%, #100e08 100%); }
+  .ig-cell-bg-6 { background: linear-gradient(135deg, #0e1018 0%, #18202a 50%, #0c1018 100%); }
+  .ig-cell-bg-7 { background: linear-gradient(135deg, #180e0e 0%, #2a1818 50%, #120a0a 100%); }
+  .ig-cell-bg-8 { background: linear-gradient(135deg, #100e18 0%, #1e1828 50%, #0c0a12 100%); }
+
+  .ig-cell-glyph {
     position: absolute;
     top: 50%; left: 50%;
     transform: translate(-50%, -50%);
-    width: 600px; height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, rgba(255,43,43,0.08) 0%, transparent 70%);
+    font-family: var(--display);
+    font-size: clamp(40px, 5vw, 70px);
+    opacity: 0.05;
+    letter-spacing: -0.05em;
+    white-space: nowrap;
     pointer-events: none;
-    animation: ctaGlow 4s ease-in-out infinite;
+    transition: opacity 0.5s;
   }
-  @keyframes ctaGlow {
-    0%, 100% { transform: translate(-50%, -50%) scale(1); opacity: 1; }
-    50% { transform: translate(-50%, -50%) scale(1.2); opacity: 0.7; }
+  .ig-cell:hover .ig-cell-glyph { opacity: 0.09; }
+
+  .ig-cell-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(0,0,0,0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: opacity 0.4s;
   }
-  .cta-eyebrow {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.4em;
-    color: var(--red);
-    margin-bottom: 40px;
-    position: relative;
-    z-index: 1;
+  .ig-cell:hover .ig-cell-overlay { opacity: 1; }
+  .ig-cell-overlay svg { width: 22px; height: 22px; fill: var(--accent); margin-bottom: 8px; }
+  .ig-cell-overlay span {
+    font-size: 0.6rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white-dim);
   }
-  .cta-title {
-    font-family: var(--font-display);
-    font-size: clamp(60px, 9vw, 140px);
-    line-height: 0.9;
-    color: var(--white);
-    margin-bottom: 60px;
-    position: relative;
-    z-index: 1;
-  }
-  .cta-title span { color: var(--red); }
-  .cta-actions {
+
+  .ig-footer {
+    margin-top: 48px;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 24px;
-    position: relative;
-    z-index: 1;
+    gap: 16px;
   }
-  .btn-big {
+  .ig-handle {
+    font-family: var(--serif);
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: var(--white-dim);
+    font-style: italic;
+  }
+  .ig-handle span { color: var(--accent); }
+  .ig-follow {
     display: inline-flex;
     align-items: center;
-    gap: 16px;
-    background: var(--red);
-    color: var(--white);
-    padding: 20px 48px;
-    font-family: var(--font-mono);
-    font-size: 12px;
+    gap: 8px;
+    color: var(--accent);
+    text-decoration: none;
+    font-size: 0.7rem;
     letter-spacing: 0.2em;
-    text-decoration: none;
-    transition: all 0.3s ease;
-    position: relative;
-    overflow: hidden;
+    text-transform: uppercase;
+    border: 1px solid rgba(201,169,110,0.3);
+    padding: 10px 22px;
+    transition: all 0.3s;
   }
-  .btn-big::after {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background: var(--white);
-    transform: scaleX(0);
-    transform-origin: right;
-    transition: transform 0.4s ease;
+  .ig-follow:hover {
+    background: var(--accent);
+    color: var(--black);
   }
-  .btn-big:hover::after { transform: scaleX(1); transform-origin: left; }
-  .btn-big:hover { color: var(--black); }
-  .btn-big span, .btn-big svg { position: relative; z-index: 1; }
-  .cta-email {
-    font-family: var(--font-mono);
-    font-size: 13px;
-    letter-spacing: 0.1em;
-    color: var(--gray3);
-    text-decoration: none;
-    border-bottom: 1px solid rgba(255,255,255,0.2);
-    padding-bottom: 2px;
-    transition: color 0.3s, border-color 0.3s;
-  }
-  .cta-email:hover { color: var(--white); border-color: var(--white); }
 
-  /* FOOTER */
-  footer {
-    background: var(--gray);
-    padding: 60px 48px 40px;
-    border-top: 1px solid rgba(255,255,255,0.06);
+  /* ─── CONTACT ─── */
+  #contact { background: var(--black); }
+  .contact-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr;
+    gap: 100px;
+    align-items: start;
   }
-  .footer-top {
+  .contact-left {}
+  .contact-tagline {
+    font-family: var(--serif);
+    font-size: clamp(2rem, 4vw, 3.8rem);
+    font-weight: 300;
+    line-height: 1.1;
+    margin-bottom: 40px;
+  }
+  .contact-tagline em { font-style: italic; color: var(--accent); }
+  .contact-meta {
     display: flex;
-    align-items: flex-start;
-    justify-content: space-between;
-    padding-bottom: 48px;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    margin-bottom: 32px;
+    flex-direction: column;
+    gap: 28px;
+    margin-bottom: 50px;
   }
-  .footer-logo-area .logo-big {
-    font-family: var(--font-display);
-    font-size: 48px;
-    color: var(--white);
-    letter-spacing: 0.02em;
-    line-height: 1;
-    display: flex;
-    align-items: flex-start;
-    gap: 4px;
-  }
-  .footer-logo-area .logo-big .red-sq {
-    width: 9px; height: 9px;
-    background: var(--red);
-    border-radius: 1px;
-    margin-top: 4px;
-    animation: dotPulse 2s ease-in-out infinite;
-  }
-  .footer-tagline {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.25em;
-    color: var(--gray3);
-    margin-top: 12px;
-  }
-  .footer-links {
-    display: flex;
-    gap: 80px;
-  }
-  .footer-col-title {
-    font-family: var(--font-mono);
-    font-size: 9px;
+  .contact-item {}
+  .contact-item-label {
+    font-size: 0.6rem;
     letter-spacing: 0.3em;
-    color: var(--red);
-    margin-bottom: 20px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 6px;
   }
-  .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
-  .footer-col a {
-    font-size: 14px;
-    color: var(--gray3);
+  .contact-item-val {
+    font-size: 0.88rem;
+    color: var(--white-dim);
     text-decoration: none;
     transition: color 0.3s;
-    font-weight: 300;
   }
-  .footer-col a:hover { color: var(--white); }
-  .footer-bottom {
+  a.contact-item-val:hover { color: var(--white); }
+  .contact-socials { display: flex; gap: 20px; }
+  .social-btn {
+    width: 44px; height: 44px;
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+    transition: all 0.3s;
+  }
+  .social-btn:hover {
+    border-color: var(--accent);
+    background: var(--accent-dim);
+  }
+  .social-btn svg { width: 16px; height: 16px; fill: var(--white-dim); transition: fill 0.3s; }
+  .social-btn:hover svg { fill: var(--accent); }
+
+  /* FORM */
+  .contact-form { display: flex; flex-direction: column; gap: 0; }
+  .form-row {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1px;
+  }
+  .form-group {
+    position: relative;
+    border-bottom: 1px solid var(--border);
+    padding: 28px 0 16px;
+    transition: border-color 0.3s;
+  }
+  .form-group:focus-within { border-color: var(--accent); }
+  .form-label {
+    position: absolute;
+    top: 28px;
+    left: 0;
+    font-size: 0.65rem;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+    pointer-events: none;
+    transition: all 0.3s;
+  }
+  .form-group:focus-within .form-label,
+  .form-group.filled .form-label {
+    top: 10px;
+    font-size: 0.55rem;
+    color: var(--accent);
+  }
+  .form-input, .form-select, .form-textarea {
+    width: 100%;
+    background: transparent;
+    border: none;
+    outline: none;
+    color: var(--white);
+    font-family: var(--sans);
+    font-size: 0.88rem;
+    font-weight: 300;
+    padding-top: 18px;
+    appearance: none;
+    -webkit-appearance: none;
+  }
+  .form-select option { background: var(--charcoal); color: var(--white); }
+  .form-textarea { resize: none; height: 100px; }
+  .form-group.full { grid-column: span 2; }
+  .form-submit {
+    margin-top: 44px;
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .form-note {
+    font-size: 0.7rem;
+    color: var(--white-dim);
+    opacity: 0.6;
+  }
+
+  /* ─── FOOTER ─── */
+  footer {
+    background: var(--charcoal);
+    border-top: 1px solid var(--border);
+    padding: 48px 60px;
     display: flex;
     align-items: center;
     justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 20px;
   }
+  .footer-logo {
+    font-family: var(--serif);
+    font-size: 1.1rem;
+    font-weight: 300;
+    letter-spacing: 0.25em;
+    text-transform: uppercase;
+    color: var(--white-dim);
+  }
+  .footer-logo span { color: var(--accent); }
   .footer-copy {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    letter-spacing: 0.15em;
-    color: var(--gray3);
+    font-size: 0.7rem;
+    color: rgba(245,240,235,0.25);
+    letter-spacing: 0.1em;
   }
-  .footer-red-line {
-    position: absolute;
-    bottom: 0; left: 0;
-    height: 2px;
-    background: var(--red);
-    width: 0;
-    transition: width 1s ease;
-  }
+  .footer-socials { display: flex; gap: 16px; }
   .footer-social {
-    display: flex;
-    gap: 24px;
-  }
-  .footer-social a {
-    font-family: var(--font-mono);
-    font-size: 10px;
+    font-size: 0.65rem;
     letter-spacing: 0.2em;
-    color: var(--gray3);
+    text-transform: uppercase;
+    color: var(--white-dim);
     text-decoration: none;
     transition: color 0.3s;
+    position: relative;
   }
-  .footer-social a:hover { color: var(--red); }
+  .footer-social::after {
+    content: '';
+    position: absolute;
+    bottom: -2px;
+    left: 0;
+    width: 0;
+    height: 1px;
+    background: var(--accent);
+    transition: width 0.3s;
+  }
+  .footer-social:hover { color: var(--accent); }
+  .footer-social:hover::after { width: 100%; }
 
-  /* REVEAL ANIMATIONS */
+  /* ─── REVEAL ANIMATIONS ─── */
   .reveal {
     opacity: 0;
     transform: translateY(40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
+    transition: opacity 0.9s ease, transform 0.9s ease;
   }
   .reveal.visible { opacity: 1; transform: translateY(0); }
-  .reveal-left {
-    opacity: 0;
-    transform: translateX(-40px);
-    transition: opacity 0.8s ease, transform 0.8s ease;
-  }
-  .reveal-left.visible { opacity: 1; transform: translateX(0); }
   .reveal-delay-1 { transition-delay: 0.1s; }
   .reveal-delay-2 { transition-delay: 0.2s; }
   .reveal-delay-3 { transition-delay: 0.3s; }
   .reveal-delay-4 { transition-delay: 0.4s; }
 
-  /* MAGNETIC BUTTON */
-  .magnetic { transition: transform 0.3s ease; }
+  /* ─── MOBILE NAV ─── */
+  .nav-toggle {
+    display: none;
+    flex-direction: column;
+    gap: 5px;
+    cursor: none;
+    padding: 4px;
+  }
+  .nav-toggle span {
+    width: 24px; height: 1px;
+    background: var(--white);
+    transition: all 0.3s;
+    display: block;
+  }
 
-  /* MOBILE */
-  @media (max-width: 768px) {
-    nav { padding: 20px 24px; }
+  /* ─── MOBILE ─── */
+  @media (max-width: 900px) {
+    nav { padding: 22px 24px; }
+    nav.scrolled { padding: 16px 24px; }
     .nav-links { display: none; }
+    .nav-cta { display: none; }
+    .nav-toggle { display: flex; }
+
     section { padding: 80px 24px; }
     #hero { padding: 0 24px 60px; }
-    #about { grid-template-columns: 1fr; gap: 40px; padding: 80px 24px; }
-    .services-grid { grid-template-columns: repeat(2, 1fr); }
-    .process-steps { grid-template-columns: 1fr; gap: 40px; }
-    .process-steps::before, .process-steps::after { display: none; }
-    .testi-grid { grid-template-columns: 1fr; }
-    .motion-grid { grid-template-columns: 1fr; }
-    .motion-cell.tall { grid-row: span 1; min-height: 300px; }
-    .footer-top { flex-direction: column; gap: 40px; }
-    .footer-links { gap: 40px; flex-wrap: wrap; }
-    .hero-bottom { flex-direction: column; gap: 32px; align-items: flex-start; }
-    .services-header { flex-direction: column; gap: 24px; }
-    .projects-scroll-container { padding-left: 24px; }
+    .hero-scroll { display: none; }
+
+    .work-grid {
+      grid-template-columns: 1fr;
+      gap: 2px;
+    }
+    .work-card:nth-child(1),
+    .work-card:nth-child(2),
+    .work-card:nth-child(3),
+    .work-card:nth-child(4),
+    .work-card:nth-child(5) {
+      grid-column: span 1;
+      aspect-ratio: 4/3;
+    }
+
+    .services-top { grid-template-columns: 1fr; gap: 24px; }
+    .services-grid { grid-template-columns: 1fr; }
+
+    .ig-grid { grid-template-columns: repeat(3, 1fr); }
+    .ig-cell:nth-child(1) { grid-column: span 1; grid-row: span 1; }
+
+    .contact-grid { grid-template-columns: 1fr; gap: 60px; }
+    .form-row { grid-template-columns: 1fr; }
+    .form-group.full { grid-column: span 1; }
+
+    footer { flex-direction: column; align-items: flex-start; padding: 36px 24px; }
+
+    .cursor, .cursor-ring { display: none; }
+    body { cursor: auto; }
+    .work-card, .ig-cell, .nav-toggle, .social-btn, .ig-follow, .btn-primary, .btn-ghost { cursor: pointer; }
+  }
+
+  @media (max-width: 500px) {
+    .ig-grid { grid-template-columns: repeat(2, 1fr); }
+    .ig-cell:nth-child(n+7) { display: none; }
   }
 </style>
 </head>
 <body>
 
-<!-- CUSTOM CURSOR -->
-<div id="cursor"></div>
-<div id="cursor-ring"></div>
-
-<!-- SCROLL PROGRESS -->
-<div id="progress"></div>
-
-<!-- LOADER -->
-<div id="loader">
-  <div class="loader-logo">PIXEL<span>.</span>STUDIO</div>
-  <div class="loader-bar"><div class="loader-fill"></div></div>
-  <div class="loader-num" id="loader-num">0%</div>
-</div>
+<!-- CURSOR -->
+<div class="cursor" id="cursor"></div>
+<div class="cursor-ring" id="cursorRing"></div>
 
 <!-- NAV -->
-<nav>
-  <a href="#" class="nav-logo">
-    <div class="logo-mark">
-      <span class="logo-pixel">pixel</span>
-      <span class="logo-dot"></span>
-    </div>
-    <span class="logo-studio">STUDIO</span>
-  </a>
+<nav id="navbar">
+  <a href="#" class="nav-logo">Pixel<span>.</span>Studio</a>
   <ul class="nav-links">
-    <li><a href="#about">ABOUT</a></li>
-    <li><a href="#services">SERVICES</a></li>
-    <li><a href="#projects">WORK</a></li>
-    <li><a href="#process">PROCESS</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#services">Services</a></li>
+    <li><a href="#instagram">Studio</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
-  <a href="#cta" class="nav-cta magnetic">START A PROJECT →</a>
+  <a href="#contact" class="nav-cta">Start a Project</a>
+  <button class="nav-toggle" aria-label="Menu" onclick="toggleMobileMenu()">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
 
-<!-- HERO -->
+<!-- ─── HERO ─── -->
 <section id="hero">
-  <div class="hero-grid"></div>
-  <div class="hero-accent"></div>
-  <div class="hero-eyebrow">CREATIVE DESIGN STUDIO · EST. MAY 2026</div>
-  <h1 class="hero-title">
-    WE DESIGN<br>
-    <span class="line2">BRANDS</span>
-    <span class="accent"> PEOPLE</span><br>
-    CRAVE<span class="accent">.</span>
-  </h1>
-  <div class="hero-bottom">
-    <p class="hero-sub">PIXEL STUDIO builds premium visual identities and digital experiences for cafés, restaurants, bars & hospitality brands that command attention.</p>
+  <div class="hero-bg">
+    <div class="hero-lines"></div>
+    <div class="hero-orb orb-1"></div>
+    <div class="hero-orb orb-2"></div>
+    <div class="hero-orb orb-3"></div>
+    <div class="hero-grain"></div>
+  </div>
+  <div class="hero-content">
+    <p class="hero-eyebrow">Creative Studio — Est. 2024</p>
+    <h1 class="hero-headline">We Build<br>Brands People<br><em>Crave.</em></h1>
+    <p class="hero-sub">Creative branding and digital experiences for modern food and hospitality brands.</p>
     <div class="hero-actions">
-      <a href="#projects" class="btn-primary magnetic">
-        <span>VIEW WORK</span>
-        <span class="btn-arrow">→</span>
-      </a>
-      <a href="#cta" class="btn-ghost magnetic">LET'S BUILD</a>
+      <a href="#work" class="btn-primary">View Work</a>
+      <a href="#contact" class="btn-ghost">Start a Project</a>
     </div>
   </div>
   <div class="hero-scroll">
     <div class="scroll-line"></div>
-    <span class="scroll-label">SCROLL</span>
+    <span>Scroll</span>
   </div>
 </section>
 
-<!-- TICKER -->
-<div class="ticker">
-  <div class="ticker-inner">
-    <span class="ticker-item">BRANDING <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">MENU DESIGN <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">MOTION GRAPHICS <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">IDENTITY SYSTEMS <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">HOSPITALITY BRANDS <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">SOCIAL MEDIA CREATIVES <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">PACKAGING DESIGN <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">CREATIVE DIRECTION <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">BRANDING <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">MENU DESIGN <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">MOTION GRAPHICS <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">IDENTITY SYSTEMS <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">HOSPITALITY BRANDS <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">SOCIAL MEDIA CREATIVES <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">PACKAGING DESIGN <span class="ticker-sep">·</span></span>
-    <span class="ticker-item">CREATIVE DIRECTION <span class="ticker-sep">·</span></span>
+<!-- ─── WORK ─── -->
+<section id="work">
+  <div class="section-label reveal">Selected Projects</div>
+  <div class="work-header">
+    <h2 class="work-title reveal reveal-delay-1">Featured<br><em>Work</em></h2>
+    <span class="work-count reveal reveal-delay-2">05 Projects</span>
   </div>
-</div>
+  <div class="work-grid reveal reveal-delay-2">
 
-<!-- ABOUT -->
-<section id="about">
-  <div class="about-left reveal-left">
-    <div class="big-number">PS</div>
-    <h2 class="about-heading">DESIGN IS<br>OUR<br><span style="color:var(--red)">LANGUAGE</span></h2>
-  </div>
-  <div class="about-right">
-    <div class="section-label reveal">ABOUT THE STUDIO</div>
-    <p class="reveal reveal-delay-1">
-      Founded on <strong>5 May 2026</strong>, PIXEL STUDIO was born from a singular belief — that great hospitality brands deserve world-class visual identities. We are not a generic agency.
-    </p>
-    <p class="reveal reveal-delay-2">
-      We are a <strong>design-first creative studio</strong> obsessed with the intersection of branding, storytelling, and visual experience. Every café, restaurant, and bar we work with gets a <strong>custom visual system</strong> built to be remembered.
-    </p>
-    <p class="reveal reveal-delay-3">
-      From the first sip to the last bite — we shape how hospitality brands are seen, felt, and remembered.
-    </p>
-    <div class="about-stats reveal reveal-delay-4">
-      <div>
-        <div class="stat-num">30+</div>
-        <div class="stat-label">BRANDS ELEVATED</div>
+    <div class="work-card">
+      <div class="card-bg card-bg-1"></div>
+      <div class="card-noise"></div>
+      <div class="card-icon">CAFÉ</div>
+      <div class="card-info">
+        <p class="card-cat">Café Branding</p>
+        <h3 class="card-name">Ember & Oak</h3>
+        <p class="card-desc">Full visual identity, menu system, and social media design for a specialty coffee destination.</p>
       </div>
-      <div>
-        <div class="stat-num">12</div>
-        <div class="stat-label">INDUSTRIES SERVED</div>
-      </div>
-      <div>
-        <div class="stat-num">100%</div>
-        <div class="stat-label">DESIGN-FIRST APPROACH</div>
-      </div>
-      <div>
-        <div class="stat-num">∞</div>
-        <div class="stat-label">CREATIVE AMBITION</div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/></svg>
       </div>
     </div>
+
+    <div class="work-card">
+      <div class="card-bg card-bg-2"></div>
+      <div class="card-noise"></div>
+      <div class="card-icon">RESTO</div>
+      <div class="card-info">
+        <p class="card-cat">Restaurant Identity</p>
+        <h3 class="card-name">Saffron Table</h3>
+        <p class="card-desc">Elevated brand story, digital presence, and print collateral for a fine-dining concept.</p>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/></svg>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="card-bg card-bg-3"></div>
+      <div class="card-noise"></div>
+      <div class="card-icon">BAR</div>
+      <div class="card-info">
+        <p class="card-cat">Cocktail Bar</p>
+        <h3 class="card-name">Noir & Nectar</h3>
+        <p class="card-desc">Moody brand identity and cocktail menu design for a speakeasy-inspired bar.</p>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/></svg>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="card-bg card-bg-4"></div>
+      <div class="card-noise"></div>
+      <div class="card-icon">BRAND</div>
+      <div class="card-info">
+        <p class="card-cat">Food Brand</p>
+        <h3 class="card-name">Harvest & Co.</h3>
+        <p class="card-desc">Packaging design and content strategy for an artisan food brand across retail channels.</p>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/></svg>
+      </div>
+    </div>
+
+    <div class="work-card">
+      <div class="card-bg card-bg-5"></div>
+      <div class="card-noise"></div>
+      <div class="card-icon">QSR</div>
+      <div class="card-info">
+        <p class="card-cat">Franchise Branding</p>
+        <h3 class="card-name">Fold & Fire</h3>
+        <p class="card-desc">Scalable brand system and creative direction for a fast-casual dining franchise.</p>
+      </div>
+      <div class="card-arrow">
+        <svg viewBox="0 0 24 24"><line x1="7" y1="17" x2="17" y2="7"/><polyline points="7,7 17,7 17,17"/></svg>
+      </div>
+    </div>
+
   </div>
 </section>
 
-<!-- SERVICES -->
+<!-- ─── SERVICES ─── -->
 <section id="services">
-  <div class="services-header">
-    <h2 class="services-title reveal">WHAT<br>WE DO<span style="color:var(--red)">.</span></h2>
-    <p class="services-desc reveal">Premium creative services crafted for hospitality brands that want to stand out in a saturated world.</p>
+  <div class="section-label reveal">What We Do</div>
+  <div class="services-top">
+    <h2 class="services-title reveal reveal-delay-1">Craft Meets<br><em>Strategy.</em></h2>
+    <p class="services-desc reveal reveal-delay-2">We design with intent — every visual decision rooted in your brand's story, your audience's desire, and your business's ambition.</p>
   </div>
-  <div class="services-grid">
-    <div class="service-card reveal">
-      <div>
-        <div class="service-num">01</div>
-        <div class="service-name">BRAND IDENTITY</div>
-        <div class="service-tag">LOGOS · SYSTEMS · GUIDELINES</div>
-      </div>
-      <div class="service-arrow">→</div>
+  <div class="services-grid reveal reveal-delay-2">
+    <div class="service-card">
+      <div class="service-num">01</div>
+      <h3 class="service-name">Brand Identity</h3>
+      <p class="service-text">Logo, typography, color systems, and visual language built to last — and to stand out.</p>
+      <div class="service-glow"></div>
     </div>
-    <div class="service-card reveal reveal-delay-1">
-      <div>
-        <div class="service-num">02</div>
-        <div class="service-name">MENU DESIGN</div>
-        <div class="service-tag">PRINT · DIGITAL · PREMIUM</div>
-      </div>
-      <div class="service-arrow">→</div>
+    <div class="service-card">
+      <div class="service-num">02</div>
+      <h3 class="service-name">Social Media Design</h3>
+      <p class="service-text">Feed aesthetics, story templates, and reels direction that make people stop scrolling.</p>
+      <div class="service-glow"></div>
     </div>
-    <div class="service-card reveal reveal-delay-2">
-      <div>
-        <div class="service-num">03</div>
-        <div class="service-name">MOTION GRAPHICS</div>
-        <div class="service-tag">REELS · ANIMATIONS · KINETIC</div>
-      </div>
-      <div class="service-arrow">→</div>
+    <div class="service-card">
+      <div class="service-num">03</div>
+      <h3 class="service-name">Menu Design</h3>
+      <p class="service-text">Tactile, beautiful menus — print and digital — designed to elevate the dining experience.</p>
+      <div class="service-glow"></div>
     </div>
-    <div class="service-card reveal reveal-delay-3">
-      <div>
-        <div class="service-num">04</div>
-        <div class="service-name">SOCIAL MEDIA</div>
-        <div class="service-tag">CREATIVES · CONTENT · STRATEGY</div>
-      </div>
-      <div class="service-arrow">→</div>
+    <div class="service-card">
+      <div class="service-num">04</div>
+      <h3 class="service-name">Packaging</h3>
+      <p class="service-text">Shelf-ready packaging that tells your story and commands attention at first glance.</p>
+      <div class="service-glow"></div>
     </div>
-    <div class="service-card reveal">
-      <div>
-        <div class="service-num">05</div>
-        <div class="service-name">PACKAGING</div>
-        <div class="service-tag">BOXES · LABELS · WRAPPERS</div>
-      </div>
-      <div class="service-arrow">→</div>
+    <div class="service-card">
+      <div class="service-num">05</div>
+      <h3 class="service-name">Creative Direction</h3>
+      <p class="service-text">Art direction, visual strategy, and brand consulting for launches, rebrands, and campaigns.</p>
+      <div class="service-glow"></div>
     </div>
-    <div class="service-card reveal reveal-delay-1">
-      <div>
-        <div class="service-num">06</div>
-        <div class="service-name">CREATIVE DIRECTION</div>
-        <div class="service-tag">ART DIRECTION · SHOOTS · VISION</div>
-      </div>
-      <div class="service-arrow">→</div>
-    </div>
-    <div class="service-card reveal reveal-delay-2">
-      <div>
-        <div class="service-num">07</div>
-        <div class="service-name">SIGNAGE & WAYFINDING</div>
-        <div class="service-tag">INTERIOR · EXTERIOR · ENVIRONMENTAL</div>
-      </div>
-      <div class="service-arrow">→</div>
-    </div>
-    <div class="service-card reveal reveal-delay-3">
-      <div>
-        <div class="service-num">08</div>
-        <div class="service-name">UI/UX DESIGN</div>
-        <div class="service-tag">WEB · APP · DIGITAL EXPERIENCE</div>
-      </div>
-      <div class="service-arrow">→</div>
+    <div class="service-card">
+      <div class="service-num">06</div>
+      <h3 class="service-name">Content Strategy</h3>
+      <p class="service-text">A cohesive visual narrative across every touchpoint — from launch to daily digital presence.</p>
+      <div class="service-glow"></div>
     </div>
   </div>
 </section>
 
-<!-- PROJECTS -->
-<section id="projects">
-  <div class="projects-header">
-    <div class="section-label reveal">SELECTED WORK</div>
-    <h2 class="projects-title reveal">CASE<br>STUDIES<span style="color:var(--red)">.</span></h2>
-  </div>
-  <div class="projects-scroll-container" id="projectsScroll">
-    <div class="project-card">
-      <div class="project-bg">Caf</div>
-      <div class="project-visual">
-        <div class="project-mockup">
-          <div class="mockup-logo">ARIA</div>
-          <div class="mockup-sub">CAFÉ & BAR · CHANDIGARH</div>
-          <div class="mockup-lines">
-            <div class="mockup-line red"></div>
-            <div class="mockup-line"></div>
-            <div class="mockup-line short"></div>
-          </div>
-          <div class="mockup-accent"></div>
-        </div>
-      </div>
-      <div class="project-info">
-        <div class="project-cat">LUXURY CAFÉ BRANDING</div>
-        <div class="project-name">ARIA KITCHEN & BAR</div>
-        <div class="project-year">2026 · BRANDING · MENU · IDENTITY</div>
-      </div>
-    </div>
-    <div class="project-card">
-      <div class="project-bg">Bar</div>
-      <div class="project-visual">
-        <div class="project-mockup" style="background: #0d0d0d;">
-          <div class="mockup-logo" style="color:var(--red)">NOIR</div>
-          <div class="mockup-sub">COCKTAIL BAR</div>
-          <div class="mockup-lines">
-            <div class="mockup-line" style="background:rgba(255,43,43,0.4)"></div>
-            <div class="mockup-line short"></div>
-            <div class="mockup-line"></div>
-          </div>
-          <div class="mockup-accent"></div>
-        </div>
-      </div>
-      <div class="project-info">
-        <div class="project-cat">COCKTAIL BAR IDENTITY</div>
-        <div class="project-name">NOIR SOCIAL CLUB</div>
-        <div class="project-year">2026 · IDENTITY · SIGNAGE · MOTION</div>
-      </div>
-    </div>
-    <div class="project-card">
-      <div class="project-bg">Coff</div>
-      <div class="project-visual">
-        <div class="project-mockup" style="background: #141414;">
-          <div class="mockup-logo" style="font-size:24px; letter-spacing:0.15em">CHANDIGARH<br>COFFEE CO.</div>
-          <div class="mockup-sub" style="margin-top:8px">SPECIALTY COFFEE</div>
-          <div class="mockup-lines">
-            <div class="mockup-line"></div>
-            <div class="mockup-line red"></div>
-            <div class="mockup-line short"></div>
-          </div>
-          <div class="mockup-accent"></div>
-        </div>
-      </div>
-      <div class="project-info">
-        <div class="project-cat">MODERN COFFEE BRAND</div>
-        <div class="project-name">CHANDIGARH COFFEE CO.</div>
-        <div class="project-year">2026 · PACKAGING · MENU · SOCIAL</div>
-      </div>
-    </div>
-    <div class="project-card">
-      <div class="project-bg">Brew</div>
-      <div class="project-visual">
-        <div class="project-mockup" style="background: #0f0f0f; border-color:rgba(255,43,43,0.15)">
-          <div class="mockup-logo">URBAN<br>BREW</div>
-          <div class="mockup-sub">CRAFT BREWERY</div>
-          <div class="mockup-lines">
-            <div class="mockup-line" style="background:rgba(255,43,43,0.5)"></div>
-            <div class="mockup-line"></div>
-            <div class="mockup-line short"></div>
-          </div>
-          <div class="mockup-accent"></div>
-        </div>
-      </div>
-      <div class="project-info">
-        <div class="project-cat">BREWERY CAMPAIGN DESIGN</div>
-        <div class="project-name">URBAN BREW CO.</div>
-        <div class="project-year">2026 · LABELS · CAMPAIGN · MOTION</div>
-      </div>
-    </div>
-    <div class="project-card">
-      <div class="project-bg">Menu</div>
-      <div class="project-visual">
-        <div class="project-mockup">
-          <div class="mockup-logo" style="font-size:20px">OLIVE CAFÉ<br>& BAR</div>
-          <div class="mockup-sub">CHANDIGARH</div>
-          <div class="mockup-lines">
-            <div class="mockup-line"></div>
-            <div class="mockup-line red"></div>
-            <div class="mockup-line"></div>
-            <div class="mockup-line short"></div>
-          </div>
-          <div class="mockup-accent"></div>
-        </div>
-      </div>
-      <div class="project-info">
-        <div class="project-cat">RESTAURANT MENU SYSTEM</div>
-        <div class="project-name">OLIVE CAFÉ & BAR</div>
-        <div class="project-year">2026 · MENU · IDENTITY · SIGNAGE</div>
-      </div>
-    </div>
-    <div class="project-card">
-      <div class="project-bg">Food</div>
-      <div class="project-visual">
-        <div class="project-mockup" style="background:#111; border-color:rgba(255,255,255,0.04)">
-          <div class="mockup-logo" style="color:var(--red); font-size:22px">SPICE<br>REPUBLIC</div>
-          <div class="mockup-sub">PREMIUM FOOD FRANCHISE</div>
-          <div class="mockup-lines">
-            <div class="mockup-line short"></div>
-            <div class="mockup-line red"></div>
-            <div class="mockup-line"></div>
-          </div>
-          <div class="mockup-accent"></div>
-        </div>
-      </div>
-      <div class="project-info">
-        <div class="project-cat">PREMIUM FOOD FRANCHISE</div>
-        <div class="project-name">SPICE REPUBLIC</div>
-        <div class="project-year">2026 · BRANDING · PACKAGING · UX</div>
-      </div>
-    </div>
-  </div>
+<!-- ─── PHILOSOPHY ─── -->
+<section id="philosophy">
+  <div class="philosophy-bg"></div>
+  <div class="philosophy-line"></div>
+  <span class="philosophy-label reveal">Our Philosophy</span>
+  <h2 class="philosophy-statement reveal reveal-delay-1">
+    Design that turns<br>food brands into<br><em>experiences.</em>
+  </h2>
+  <p class="philosophy-sub reveal reveal-delay-2">We believe great brands are felt, not just seen.</p>
 </section>
 
-<!-- MOTION SHOWCASE -->
-<section id="motion">
-  <div class="section-label reveal">MOTION & ANIMATION</div>
-  <h2 class="motion-title reveal">BRANDS IN<br>MOTION<span style="color:var(--red)">.</span></h2>
-  <div class="motion-grid">
-    <div class="motion-cell tall">
-      <div class="motion-anim">
-        <div class="kine-text">PIXEL</div>
-        <div class="kine-text">STUDIO</div>
-        <div class="kine-sub">CREATIVE DESIGN MOTION</div>
-        <div class="pulse-bars" style="margin-top:20px">
-          <div class="pulse-bar"></div>
-          <div class="pulse-bar"></div>
-          <div class="pulse-bar"></div>
-          <div class="pulse-bar"></div>
-          <div class="pulse-bar"></div>
-          <div class="pulse-bar"></div>
-          <div class="pulse-bar"></div>
-        </div>
-      </div>
-      <div class="motion-label">KINETIC TYPOGRAPHY</div>
-    </div>
-    <div class="motion-cell">
-      <div class="motion-anim">
-        <div class="rot-ring">
-          <div class="rot-center"></div>
-        </div>
-      </div>
-      <div class="motion-label">LOGO MOTION SYSTEM</div>
-    </div>
-    <div class="motion-cell">
-      <div class="motion-anim">
-        <div class="arrow-orbit">
-          <div class="orbit-center">PS</div>
-          <div class="orbit-dot"></div>
-        </div>
-      </div>
-      <div class="motion-label">BRAND ORBIT SYSTEM</div>
-    </div>
-    <div class="motion-cell">
-      <div class="motion-anim">
-        <div class="grid-anim">
-          <div class="ga-cell"></div><div class="ga-cell"></div><div class="ga-cell"></div><div class="ga-cell"></div>
-          <div class="ga-cell"></div><div class="ga-cell"></div><div class="ga-cell"></div><div class="ga-cell"></div>
-          <div class="ga-cell"></div><div class="ga-cell"></div><div class="ga-cell"></div><div class="ga-cell"></div>
-          <div class="ga-cell"></div><div class="ga-cell"></div><div class="ga-cell"></div><div class="ga-cell"></div>
-        </div>
-      </div>
-      <div class="motion-label">ANIMATED GRID SYSTEM</div>
-    </div>
-    <div class="motion-cell" style="background: linear-gradient(135deg, #1a0000, #0d0d0d);">
-      <div class="motion-anim">
-        <div style="text-align:center; padding: 20px;">
-          <div style="font-family:var(--font-display); font-size:40px; color:var(--red); animation: kineShift 2s ease-in-out infinite alternate; letter-spacing:0.1em">SOCIAL<br>REELS</div>
-          <div style="font-family:var(--font-mono); font-size:9px; letter-spacing:0.3em; color:var(--gray3); margin-top:12px">MOTION DESIGN</div>
-        </div>
-      </div>
-      <div class="motion-label">SOCIAL MEDIA MOTION</div>
-    </div>
-  </div>
-</section>
-
-<!-- PROCESS -->
-<section id="process">
-  <div class="section-label reveal">HOW WE WORK</div>
-  <h2 class="process-title reveal">THE<br>PROCESS<span style="color:var(--red)">.</span></h2>
-  <div class="process-steps">
-    <div class="step reveal">
-      <div class="step-dot"><div class="step-dot-inner"></div></div>
-      <div class="step-num">01</div>
-      <div class="step-title">DISCOVER</div>
-      <div class="step-desc">Deep dive into your brand, audience, and ambitions. We listen before we create.</div>
-    </div>
-    <div class="step reveal reveal-delay-1">
-      <div class="step-dot"><div class="step-dot-inner"></div></div>
-      <div class="step-num">02</div>
-      <div class="step-title">STRATEGY</div>
-      <div class="step-desc">Positioning, personality, and creative direction. The blueprint before the build.</div>
-    </div>
-    <div class="step reveal reveal-delay-2">
-      <div class="step-dot"><div class="step-dot-inner"></div></div>
-      <div class="step-num">03</div>
-      <div class="step-title">IDENTITY</div>
-      <div class="step-desc">Crafting the visual language — logos, typography, color, and system elements.</div>
-    </div>
-    <div class="step reveal reveal-delay-3">
-      <div class="step-dot"><div class="step-dot-inner"></div></div>
-      <div class="step-num">04</div>
-      <div class="step-title">EXPERIENCE</div>
-      <div class="step-desc">Menus, socials, packaging, signage, motion. Every touchpoint, perfected.</div>
-    </div>
-    <div class="step reveal reveal-delay-4">
-      <div class="step-dot"><div class="step-dot-inner"></div></div>
-      <div class="step-num">05</div>
-      <div class="step-title">LAUNCH</div>
-      <div class="step-desc">Go live with full assets, guidelines, and support to make an iconic debut.</div>
-    </div>
-  </div>
-</section>
-
-<!-- TESTIMONIALS -->
-<section id="testimonials">
-  <div class="section-label reveal">WHAT CLIENTS SAY</div>
-  <h2 class="testi-title reveal">WORDS<br>THAT MATTER<span style="color:var(--red)">.</span></h2>
-  <div class="testi-grid">
-    <div class="testi-card reveal">
-      <div class="testi-quote">"</div>
-      <p class="testi-text">PIXEL STUDIO completely transformed how our café is perceived. The branding, menu, and social presence all feel like one cohesive universe. Our footfall doubled in 3 months.</p>
-      <div class="testi-author">
-        <div class="testi-avatar">A</div>
-        <div>
-          <div class="testi-name">ARYAN MEHTA</div>
-          <div class="testi-role">FOUNDER · ARIA KITCHEN & BAR</div>
-        </div>
-      </div>
-    </div>
-    <div class="testi-card reveal reveal-delay-1">
-      <div class="testi-quote">"</div>
-      <p class="testi-text">They didn't just design a logo. They built an entire world for our brand. Every element tells a story. Our customers constantly ask who designed everything.</p>
-      <div class="testi-author">
-        <div class="testi-avatar">S</div>
-        <div>
-          <div class="testi-name">SIMRAN KAUR</div>
-          <div class="testi-role">CO-FOUNDER · CHANDIGARH COFFEE CO.</div>
-        </div>
-      </div>
-    </div>
-    <div class="testi-card reveal reveal-delay-2">
-      <div class="testi-quote">"</div>
-      <p class="testi-text">Working with PIXEL STUDIO felt like working with a team from London or New York. World-class quality, deep understanding of hospitality, and fast execution. Absolute professionals.</p>
-      <div class="testi-author">
-        <div class="testi-avatar">R</div>
-        <div>
-          <div class="testi-name">RAHUL SHARMA</div>
-          <div class="testi-role">DIRECTOR · OLIVE CAFÉ & BAR</div>
-        </div>
-      </div>
-    </div>
-  </div>
-</section>
-
-<!-- CTA -->
-<section id="cta">
-  <div class="cta-eyebrow">READY TO START?</div>
-  <h2 class="cta-title reveal">LET'S BUILD THE<br>NEXT <span>ICONIC</span><br>HOSPITALITY BRAND<span>.</span></h2>
-  <div class="cta-actions reveal reveal-delay-1">
-    <a href="mailto:hello@pixelstudio.in" class="btn-big magnetic">
-      <span>START YOUR PROJECT</span>
-      <svg width="20" height="20" viewBox="0 0 20 20" fill="none">
-        <path d="M4 10h12M12 6l4 4-4 4" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
-      </svg>
+<!-- ─── INSTAGRAM ─── -->
+<section id="instagram">
+  <div class="ig-header">
+    <h2 class="ig-title reveal"><em>Studio</em><br>Archive</h2>
+    <a href="https://www.instagram.com/p.ixel_studio/" target="_blank" rel="noopener" class="ig-link reveal reveal-delay-1">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+      Follow @p.ixel_studio
     </a>
-    <a href="mailto:hello@pixelstudio.in" class="cta-email">hello@pixelstudio.in</a>
+  </div>
+
+  <div class="ig-grid reveal reveal-delay-1">
+    <div class="ig-cell">
+      <div class="ig-cell-bg ig-cell-bg-1"></div>
+      <div class="ig-cell-glyph">BRAND</div>
+      <div class="ig-cell-overlay">
+        <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        <span>View Post</span>
+      </div>
+    </div>
+    <div class="ig-cell"><div class="ig-cell-bg ig-cell-bg-2"></div><div class="ig-cell-glyph">CAFÉ</div><div class="ig-cell-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span>View Post</span></div></div>
+    <div class="ig-cell"><div class="ig-cell-bg ig-cell-bg-3"></div><div class="ig-cell-glyph">MENU</div><div class="ig-cell-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span>View Post</span></div></div>
+    <div class="ig-cell"><div class="ig-cell-bg ig-cell-bg-4"></div><div class="ig-cell-glyph">BAR</div><div class="ig-cell-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span>View Post</span></div></div>
+    <div class="ig-cell"><div class="ig-cell-bg ig-cell-bg-5"></div><div class="ig-cell-glyph">FOOD</div><div class="ig-cell-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span>View Post</span></div></div>
+    <div class="ig-cell"><div class="ig-cell-bg ig-cell-bg-6"></div><div class="ig-cell-glyph">PACK</div><div class="ig-cell-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span>View Post</span></div></div>
+    <div class="ig-cell"><div class="ig-cell-bg ig-cell-bg-7"></div><div class="ig-cell-glyph">LOGO</div><div class="ig-cell-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span>View Post</span></div></div>
+    <div class="ig-cell"><div class="ig-cell-bg ig-cell-bg-8"></div><div class="ig-cell-glyph">ART</div><div class="ig-cell-overlay"><svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg><span>View Post</span></div></div>
+  </div>
+
+  <div class="ig-footer reveal reveal-delay-3">
+    <span class="ig-handle"><span>@p.ixel_studio</span></span>
+    <a href="https://www.instagram.com/p.ixel_studio/" target="_blank" rel="noopener" class="ig-follow">Follow on Instagram</a>
   </div>
 </section>
 
-<!-- FOOTER -->
-<footer style="position:relative;">
-  <div class="footer-top">
-    <div class="footer-logo-area">
-      <div class="logo-big">
-        pixel<span class="red-sq"></span>studio
+<!-- ─── CONTACT ─── -->
+<section id="contact">
+  <div class="section-label reveal">Get in Touch</div>
+  <div class="contact-grid">
+    <div class="contact-left">
+      <h2 class="contact-tagline reveal reveal-delay-1">Let's Build<br>Something<br><em>Remarkable.</em></h2>
+      <div class="contact-meta reveal reveal-delay-2">
+        <div class="contact-item">
+          <p class="contact-item-label">Email</p>
+          <a href="mailto:hellopixelstudio.design@gmail.com" class="contact-item-val">hellopixelstudio.design@gmail.com</a>
+        </div>
+        <div class="contact-item">
+          <p class="contact-item-label">Instagram</p>
+          <a href="https://www.instagram.com/p.ixel_studio/" target="_blank" rel="noopener" class="contact-item-val">@p.ixel_studio</a>
+        </div>
+        <div class="contact-item">
+          <p class="contact-item-label">Response Time</p>
+          <span class="contact-item-val">Within 24 hours</span>
+        </div>
       </div>
-      <div class="footer-tagline">DESIGNING THE VISUAL CULTURE OF HOSPITALITY · EST. 2026</div>
+      <div class="contact-socials reveal reveal-delay-3">
+        <a href="https://www.instagram.com/p.ixel_studio/" target="_blank" rel="noopener" class="social-btn" title="Instagram">
+          <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 100 12.324 6.162 6.162 0 000-12.324zM12 16a4 4 0 110-8 4 4 0 010 8zm6.406-11.845a1.44 1.44 0 100 2.881 1.44 1.44 0 000-2.881z"/></svg>
+        </a>
+        <a href="mailto:hellopixelstudio.design@gmail.com" class="social-btn" title="Email">
+          <svg viewBox="0 0 24 24"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/></svg>
+        </a>
+      </div>
     </div>
-    <div class="footer-links">
-      <div class="footer-col">
-        <div class="footer-col-title">SERVICES</div>
-        <ul>
-          <li><a href="#">Brand Identity</a></li>
-          <li><a href="#">Menu Design</a></li>
-          <li><a href="#">Motion Graphics</a></li>
-          <li><a href="#">Social Media</a></li>
-          <li><a href="#">Packaging</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">STUDIO</div>
-        <ul>
-          <li><a href="#">About</a></li>
-          <li><a href="#">Process</a></li>
-          <li><a href="#">Selected Work</a></li>
-          <li><a href="#">Start a Project</a></li>
-        </ul>
-      </div>
-      <div class="footer-col">
-        <div class="footer-col-title">CONNECT</div>
-        <ul>
-          <li><a href="#">Instagram</a></li>
-          <li><a href="#">Behance</a></li>
-          <li><a href="#">LinkedIn</a></li>
-          <li><a href="mailto:hello@pixelstudio.in">Email Us</a></li>
-        </ul>
+
+    <div class="reveal reveal-delay-2">
+      <div class="contact-form">
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Your Name</label>
+            <input type="text" class="form-input" oninput="checkFill(this)">
+          </div>
+          <div class="form-group">
+            <label class="form-label">Business Name</label>
+            <input type="text" class="form-input" oninput="checkFill(this)">
+          </div>
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Project Type</label>
+            <select class="form-select" onchange="checkFill(this)">
+              <option value=""></option>
+              <option>Brand Identity</option>
+              <option>Menu Design</option>
+              <option>Social Media Design</option>
+              <option>Packaging</option>
+              <option>Creative Direction</option>
+              <option>Content Strategy</option>
+              <option>Full Studio Package</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Budget Range</label>
+            <select class="form-select" onchange="checkFill(this)">
+              <option value=""></option>
+              <option>₹25K – ₹50K</option>
+              <option>₹50K – ₹1L</option>
+              <option>₹1L – ₹2.5L</option>
+              <option>₹2.5L+</option>
+              <option>Let's Discuss</option>
+            </select>
+          </div>
+        </div>
+        <div class="form-group full">
+          <label class="form-label">Tell Us About Your Project</label>
+          <textarea class="form-textarea" oninput="checkFill(this)"></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="button" class="btn-primary" onclick="submitForm(this)">Send Enquiry</button>
+          <span class="form-note">We respond within 24 hours.</span>
+        </div>
       </div>
     </div>
   </div>
-  <div class="footer-bottom">
-    <div class="footer-copy">© 2026 PIXEL STUDIO. ALL RIGHTS RESERVED.</div>
-    <div class="footer-social">
-      <a href="#">IG</a>
-      <a href="#">BE</a>
-      <a href="#">LI</a>
-    </div>
+</section>
+
+<!-- ─── FOOTER ─── -->
+<footer>
+  <div class="footer-logo">Pixel<span>.</span>Studio</div>
+  <span class="footer-copy">© 2026 Pixel Studio. All rights reserved.</span>
+  <div class="footer-socials">
+    <a href="https://www.instagram.com/p.ixel_studio/" target="_blank" rel="noopener" class="footer-social">Instagram</a>
+    <a href="mailto:hellopixelstudio.design@gmail.com" class="footer-social">Email</a>
   </div>
-  <div class="footer-red-line" id="footerLine"></div>
 </footer>
 
 <script>
-  // LOADER
-  const loader = document.getElementById('loader');
-  const loaderNum = document.getElementById('loader-num');
-  let count = 0;
-  const counter = setInterval(() => {
-    count += Math.floor(Math.random() * 8) + 2;
-    if (count >= 100) {
-      count = 100;
-      clearInterval(counter);
-      setTimeout(() => { loader.classList.add('hidden'); }, 300);
-    }
-    loaderNum.textContent = count + '%';
-  }, 40);
-
-  // CURSOR
+  // ─── CURSOR ───
   const cursor = document.getElementById('cursor');
-  const ring = document.getElementById('cursor-ring');
-  let cx = 0, cy = 0, rx = 0, ry = 0;
+  const ring = document.getElementById('cursorRing');
+  let mx = 0, my = 0, rx = 0, ry = 0;
 
   document.addEventListener('mousemove', e => {
-    cx = e.clientX; cy = e.clientY;
-    cursor.style.left = cx - 6 + 'px';
-    cursor.style.top = cy - 6 + 'px';
+    mx = e.clientX; my = e.clientY;
+    cursor.style.left = mx + 'px';
+    cursor.style.top = my + 'px';
   });
 
-  function animateRing() {
-    rx += (cx - rx - 20) * 0.12;
-    ry += (cy - ry - 20) * 0.12;
+  function animateCursor() {
+    rx += (mx - rx) * 0.12;
+    ry += (my - ry) * 0.12;
     ring.style.left = rx + 'px';
     ring.style.top = ry + 'px';
-    requestAnimationFrame(animateRing);
+    requestAnimationFrame(animateCursor);
   }
-  animateRing();
+  animateCursor();
 
-  document.querySelectorAll('a, button, .service-card, .project-card, .testi-card, .magnetic').forEach(el => {
-    el.addEventListener('mouseenter', () => document.body.classList.add('hovering'));
-    el.addEventListener('mouseleave', () => document.body.classList.remove('hovering'));
+  document.querySelectorAll('a, button, .work-card, .ig-cell, .service-card, .social-btn').forEach(el => {
+    el.addEventListener('mouseenter', () => ring.classList.add('hovered'));
+    el.addEventListener('mouseleave', () => ring.classList.remove('hovered'));
   });
 
-  // SCROLL PROGRESS
-  const progress = document.getElementById('progress');
+  // ─── NAVBAR SCROLL ───
+  const navbar = document.getElementById('navbar');
   window.addEventListener('scroll', () => {
-    const scrollTop = window.scrollY;
-    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
-    progress.style.width = (scrollTop / docHeight * 100) + '%';
+    navbar.classList.toggle('scrolled', window.scrollY > 60);
   });
 
-  // SCROLL REVEAL
-  const reveals = document.querySelectorAll('.reveal, .reveal-left');
+  // ─── REVEAL ON SCROLL ───
+  const reveals = document.querySelectorAll('.reveal');
   const observer = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) e.target.classList.add('visible');
-    });
-  }, { threshold: 0.1 });
-  reveals.forEach(el => observer.observe(el));
-
-  // FOOTER LINE
-  const footerObs = new IntersectionObserver((entries) => {
-    entries.forEach(e => {
-      if (e.isIntersecting) {
-        document.getElementById('footerLine').style.width = '100%';
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+        observer.unobserve(entry.target);
       }
     });
-  }, { threshold: 0.3 });
-  footerObs.observe(document.querySelector('footer'));
+  }, { threshold: 0.1, rootMargin: '0px 0px -60px 0px' });
+  reveals.forEach(el => observer.observe(el));
 
-  // MAGNETIC BUTTONS
-  document.querySelectorAll('.magnetic').forEach(btn => {
-    btn.addEventListener('mousemove', e => {
-      const rect = btn.getBoundingClientRect();
-      const x = e.clientX - rect.left - rect.width / 2;
-      const y = e.clientY - rect.top - rect.height / 2;
-      btn.style.transform = `translate(${x * 0.2}px, ${y * 0.2}px)`;
-    });
-    btn.addEventListener('mouseleave', () => {
-      btn.style.transform = 'translate(0, 0)';
-    });
-  });
+  // ─── FORM FILL STATE ───
+  function checkFill(el) {
+    el.closest('.form-group').classList.toggle('filled', el.value.trim() !== '');
+  }
 
-  // HORIZONTAL SCROLL PROJECTS
-  const projectsScroll = document.getElementById('projectsScroll');
-  projectsScroll.addEventListener('wheel', e => {
-    e.preventDefault();
-    projectsScroll.scrollLeft += e.deltaY * 1.5;
-  }, { passive: false });
+  // ─── FORM SUBMIT ───
+  function submitForm(btn) {
+    const original = btn.textContent;
+    btn.textContent = 'Sending...';
+    btn.style.opacity = '0.7';
+    setTimeout(() => {
+      btn.textContent = 'Sent!';
+      btn.style.background = '#2a5c2a';
+      setTimeout(() => {
+        btn.textContent = original;
+        btn.style.background = '';
+        btn.style.opacity = '';
+      }, 3000);
+    }, 1200);
+  }
 
-  // PARALLAX HERO
-  window.addEventListener('scroll', () => {
-    const scroll = window.scrollY;
-    const hero = document.getElementById('hero');
-    if (hero) {
-      const grid = hero.querySelector('.hero-grid');
-      const accent = hero.querySelector('.hero-accent');
-      if (grid) grid.style.transform = `translateY(${scroll * 0.3}px)`;
-      if (accent) accent.style.transform = `translateY(${scroll * 0.2}px)`;
+  // ─── MOBILE MENU ───
+  function toggleMobileMenu() {
+    const links = document.querySelector('.nav-links');
+    const cta = document.querySelector('.nav-cta');
+    if (!document.getElementById('mobileMenu')) {
+      const menu = document.createElement('div');
+      menu.id = 'mobileMenu';
+      Object.assign(menu.style, {
+        position: 'fixed', top: '0', left: '0', right: '0', bottom: '0',
+        background: 'rgba(8,8,8,0.97)', backdropFilter: 'blur(20px)',
+        zIndex: '99', display: 'flex', flexDirection: 'column',
+        alignItems: 'center', justifyContent: 'center', gap: '40px',
+        animation: 'fadeUp 0.4s ease'
+      });
+      ['Work','Services','Studio','Contact'].forEach((label, i) => {
+        const a = document.createElement('a');
+        a.href = `#${['work','services','instagram','contact'][i]}`;
+        a.textContent = label;
+        Object.assign(a.style, {
+          fontFamily: "'Cormorant Garamond', serif", fontSize: '3rem',
+          fontWeight: '300', color: '#f5f0eb', textDecoration: 'none',
+          letterSpacing: '0.05em'
+        });
+        a.addEventListener('click', () => menu.remove());
+        menu.appendChild(a);
+      });
+      const close = document.createElement('button');
+      close.textContent = '×';
+      Object.assign(close.style, {
+        position: 'absolute', top: '24px', right: '28px',
+        background: 'none', border: 'none', color: '#c9a96e',
+        fontSize: '2rem', cursor: 'pointer', fontFamily: 'inherit'
+      });
+      close.addEventListener('click', () => menu.remove());
+      menu.appendChild(close);
+      document.body.appendChild(menu);
+    } else {
+      document.getElementById('mobileMenu').remove();
     }
+  }
+
+  // ─── SMOOTH SCROLL ───
+  document.querySelectorAll('a[href^="#"]').forEach(a => {
+    a.addEventListener('click', e => {
+      const target = document.querySelector(a.getAttribute('href'));
+      if (target) {
+        e.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+    });
   });
 </script>
 </body>
